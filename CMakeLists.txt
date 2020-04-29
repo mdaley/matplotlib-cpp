@@ -21,7 +21,13 @@ target_link_libraries(matplotlibcpp INTERFACE ${Python_LIBRARIES})
 set(targets minimal basic animation bar colorbar fill fill_inbetween imshow
         lines3d modern nonblock quiver subplot subplot2grid surface update xkcd)
 
+set(without_numpy basic)
+
 foreach(target ${targets})
     add_executable(${target} examples/${target}.cpp)
     target_link_libraries(${target} matplotlibcpp)
+    if(${target} IN_LIST without_numpy)
+        message("NO NUMPY for ${target}")
+        target_compile_definitions(${target} PRIVATE "-DWITHOUT_NUMPY")
+    endif()
 endforeach()
